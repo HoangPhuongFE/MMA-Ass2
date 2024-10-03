@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, ScrollView } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import Header from './Header';
 import Footer from './Footer';
 import MenuItems from './MenuItems';
@@ -12,7 +12,7 @@ export default function HomeScreen({ navigation }) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <View style={styles.container}>
       <Header />
       <MenuItems />
 
@@ -28,13 +28,13 @@ export default function HomeScreen({ navigation }) {
       </View>
 
       <Footer />
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
+  container: {
+    flex: 1,
     justifyContent: 'space-between', // Để bố cục cuộn được
   },
   buttonContainer: {
