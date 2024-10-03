@@ -8,19 +8,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function HomeScreen({ navigation }) {
   const [cart, setCart] = useState([]);
 
-  // Hàm logout
   const handleLogout = async () => {
     await AsyncStorage.removeItem('userToken');
     navigation.replace('Login');
   };
 
-  // Hàm thêm sản phẩm vào giỏ hàng
   const addToCart = (item) => {
-    setCart([...cart, item]);
-    AsyncStorage.setItem('cart', JSON.stringify([...cart, item]));
+    const updatedCart = [...cart, item];
+    setCart(updatedCart);
+    AsyncStorage.setItem('cart', JSON.stringify(updatedCart));
   };
 
-  // Load giỏ hàng từ AsyncStorage khi mở app
+  // Load the cart from AsyncStorage when the component mounts
   useEffect(() => {
     const loadCart = async () => {
       const savedCart = await AsyncStorage.getItem('cart');
@@ -36,7 +35,7 @@ export default function HomeScreen({ navigation }) {
       <Header navigation={navigation} cartCount={cart.length} />
       <MenuItems addToCart={addToCart} />
 
-      {/* Container cho các nút */}
+      {/* Container for buttons */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.smallTabButton} onPress={() => navigation.navigate('Profile')}>
           <Text style={styles.smallTabText}>Go to Profile</Text>
@@ -62,23 +61,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   buttonContainer: {
-    flexDirection: 'row', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    marginVertical: 10, 
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 10,
   },
   smallTabButton: {
-    backgroundColor: '#f5f5f5', 
-    paddingVertical: 8, 
-    paddingHorizontal: 15, 
-    borderRadius: 15, 
-    marginHorizontal: 8, 
-    borderWidth: 1, 
-    borderColor: '#ddd', 
+    backgroundColor: '#f5f5f5',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 15,
+    marginHorizontal: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
   smallTabText: {
-    fontSize: 14, 
+    fontSize: 14,
     color: '#333',
-    fontWeight: '500', 
+    fontWeight: '500',
   },
 });

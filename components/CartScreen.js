@@ -25,13 +25,14 @@ export default function CartScreen({ navigation }) {
   const handleCheckout = async () => {
     Alert.alert('Thông báo', 'Thanh toán thành công! Tổng giá trị đơn hàng: $' + calculateTotal(), [
       { text: 'OK', onPress: async () => {
-          setCart([]); // Xóa giỏ hàng trong state
-          await AsyncStorage.removeItem('cart'); // Xóa giỏ hàng khỏi AsyncStorage
-          navigation.navigate('Home'); // Quay lại màn hình Home
+          setCart([]); 
+          await AsyncStorage.removeItem('cart'); 
+          navigation.navigate('Home'); 
         }
       }
     ]);
-};
+  };
+  
 
   return (
     <View style={styles.container}>

@@ -18,53 +18,54 @@ export default function LoginScreen({ navigation }) {
 
   const handleLogin = async () => {
     try {
-      // Giả lập việc fetch từ mock API
       const response = await fetch('https://66fab32a8583ac93b4098581.mockapi.io/login', {
-        method: 'POST',
+        method: 'GET', 
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
       });
-  
+
       const data = await response.json();
-  
+
+     
       if (response.ok) {
-          
-        const mockToken = 'mockToken123';  // Token giả lập
-  
-        await AsyncStorage.setItem('userToken', mockToken);  // Lưu token giả lập
-        navigation.replace('Home');
+       
+        const user = data.find(user => user.username === username && user.password === password);
+        
+        if (user) {
+          const mockToken = 'mockToken123'; 
+          await AsyncStorage.setItem('userToken', mockToken); 
+          navigation.replace('Home');
+        } else {
+          Alert.alert('Lỗi', 'Tên đăng nhập hoặc mật khẩu không chính xác.');
+        }
       } else {
-        Alert.alert('Error', data.message || 'Login failed. Please check your username and password.');
+        Alert.alert('Lỗi', data.message || 'Đăng nhập thất bại. Vui lòng thử lại sau.');
       }
     } catch (error) {
-      console.error('Login Error: ', error);
-      Alert.alert('Error', 'Something went wrong. Please try again later.');
+      console.error('Lỗi đăng nhập: ', error);
+      Alert.alert('Lỗi', 'Có gì đó không đúng. Vui lòng thử lại sau.');
     }
-  };
-  
+};
+
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Đăng Nhập</Text>
       <TextInput
         style={styles.input}
-        placeholder="Username"
+        placeholder="Tên đăng nhập"
         value={username}
         onChangeText={setUsername}
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder="Mật khẩu"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
       />
-      <Button title="Login" onPress={handleLogin} />
+      <Button title="Đăng Nhập" onPress={handleLogin} />
     </View>
   );
 }
