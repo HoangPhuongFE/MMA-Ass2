@@ -1,10 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons'; 
 
-export default function Header() {
+export default function Header({ navigation, cartCount }) {
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Assignment 2</Text>
+
+      {/* Icon giỏ hàng */}
+      <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+        <FontAwesome name="shopping-cart" size={24} color="white" />
+        {cartCount > 0 && <View style={styles.cartBadge}>
+          <Text style={styles.cartCount}>{cartCount}</Text>
+        </View>}
+      </TouchableOpacity>
     </View>
   );
 }
@@ -15,19 +24,26 @@ const styles = StyleSheet.create({
     paddingVertical: 12,         
     paddingHorizontal: 20,     
     minHeight: 80,               
-    justifyContent: 'center',    
+    justifyContent: 'space-between',    
     alignItems: 'center',        
-    borderBottomWidth: 2,        
-    borderBottomColor: '#1F2D3D',
-    elevation: 2,              
-    shadowColor: '#000',         
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,          
-    shadowRadius: 2,
+    flexDirection: 'row',
   },
   headerText: {
     fontSize: 26,             
     color: '#E1F7F5',           
     fontWeight: 'bold',        
-  }
+  },
+  cartBadge: {
+    position: 'absolute',
+    right: -10,
+    top: -10,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  cartCount: {
+    color: 'white',
+    fontSize: 12,
+  },
 });

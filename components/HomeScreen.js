@@ -1,20 +1,40 @@
-import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Header from './Header';
 import Footer from './Footer';
 import MenuItems from './MenuItems';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen({ navigation }) {
+  const [cart, setCart] = useState([]);
+
+  // Hàm logout
   const handleLogout = async () => {
     await AsyncStorage.removeItem('userToken');
     navigation.replace('Login');
   };
 
+  // Hàm thêm sản phẩm vào giỏ hàng
+  const addToCart = (item) => {
+    setCart([...cart, item]);
+    AsyncStorage.setItem('cart', JSON.stringify([...cart, item]));
+  };
+
+  // Load giỏ hàng từ AsyncStorage khi mở app
+  useEffect(() => {
+    const loadCart = async () => {
+      const savedCart = await AsyncStorage.getItem('cart');
+      if (savedCart) {
+        setCart(JSON.parse(savedCart));
+      }
+    };
+    loadCart();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Header />
-      <MenuItems />
+      <Header navigation={navigation} cartCount={cart.length} />
+      <MenuItems addToCart={addToCart} />
 
       {/* Container cho các nút */}
       <View style={styles.buttonContainer}>
@@ -24,6 +44,10 @@ export default function HomeScreen({ navigation }) {
 
         <TouchableOpacity style={styles.smallTabButton} onPress={handleLogout}>
           <Text style={styles.smallTabText}>Logout</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.smallTabButton} onPress={() => navigation.navigate('Cart')}>
+          <Text style={styles.smallTabText}>Giỏ hàng</Text>
         </TouchableOpacity>
       </View>
 
@@ -35,26 +59,26 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between', // Để bố cục cuộn được
+    justifyContent: 'space-between',
   },
   buttonContainer: {
-    flexDirection: 'row',            // Đặt các nút cạnh nhau
-    justifyContent: 'center',        // Căn giữa theo chiều ngang
-    alignItems: 'center',            // Căn giữa theo chiều dọc
-    marginVertical: 10,              // Khoảng cách giữa nút và nội dung khác
+    flexDirection: 'row', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    marginVertical: 10, 
   },
   smallTabButton: {
-    backgroundColor: '#f5f5f5',      // Màu nền xám nhạt cho nút
-    paddingVertical: 8,              // Giảm padding dọc để nút nhỏ hơn
-    paddingHorizontal: 15,           // Giảm padding ngang để nút nhỏ hơn
-    borderRadius: 15,                // Bo góc nhỏ hơn cho nút
-    marginHorizontal: 8,             // Giảm khoảng cách giữa các nút
-    borderWidth: 1,                  // Thêm viền mỏng
-    borderColor: '#ddd',             // Màu viền xám nhạt
+    backgroundColor: '#f5f5f5', 
+    paddingVertical: 8, 
+    paddingHorizontal: 15, 
+    borderRadius: 15, 
+    marginHorizontal: 8, 
+    borderWidth: 1, 
+    borderColor: '#ddd', 
   },
   smallTabText: {
-    fontSize: 14,                    // Giảm kích thước chữ cho gọn hơn
-    color: '#333',                   // Màu chữ đậm
-    fontWeight: '500',               // Độ đậm vừa phải cho chữ
+    fontSize: 14, 
+    color: '#333',
+    fontWeight: '500', 
   },
 });
